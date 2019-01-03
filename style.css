@@ -1,0 +1,91 @@
+*{margin:0;padding: 0;}
+a{text-decoration: none;}
+kbd{border: 1px solid red;width: 4em;height: 4em;display: inline-block;
+text-transform: uppercase;position: relative;
+}
+/*kbd默认是内联元素，无法改变宽高，所以加了display*/
+/*text-transform将小写字母变成大写字母*/
+kbd>button{
+	position:absolute;
+	right: 0;
+	bottom: 0;
+	display: none;
+}
+kbd:hover>button{
+	display: inline-block;
+}
+/*鼠标浮到此kbd上，button才出现*/
+
+body{
+	background: grey url(./wall.jpg) no-repeat center center;
+	background-size: cover;
+}
+/*grey表示图片加载不出来时，显示的颜色*/
+/*若想看到灰色的效果，可在network中选中Slow 3G，和Disable cache*/
+/*cover表示图片将屏幕完全盖住*/
+
+main{text-align: center;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;}
+/*一开始没有给main加高度，main的高度由文档流决定，body的高度由文档流(main))决定*/
+/*即使已经垂直居中，也无法在页面内垂直居中，所以要给main加高度*/
+/*vh即viewpoint height，100vh即窗口的高度*/
+
+.wrapper{
+	background: rgba(255,255,255,0.2);
+	border-radius: 10px;
+}
+/*加透明白色背景*/
+
+#zhangsan{
+	display: inline-block;
+}
+/*css里用到id需要在其名字前加#*/
+#zhangsan>div:nth-child(2){
+	margin-left: -22px;
+}
+#zhangsan>div:nth-child(3){
+	margin-left: -80px;
+}
+.key{
+	width: 50px;
+	height: 40px;
+	background: linear-gradient(to bottom,#292929 0%,#111111 100%);
+	border: 1px solid #373737;
+	color: #C5C5C5;
+	border-radius: 6px;
+	/*指四周圆角的半径*/
+	box-shadow: 0 0 0 1px #1A1B1C, 0 0 0 2px #1F2020, 0 3px 0 2px #080808;
+	/*display: inline-flex;
+	align-items: center;
+    justify-content: center;*/
+    position: relative;
+    font-size: 16px;
+    font-family: Helvetica;
+}
+/*div不包括外面所加的shadow*/
+/*点掉的三句原本用于kbd1里面的字母居中，在我们加了span1之后，在span1里面定位即可，这三句就用不到了*/
+.row{
+    margin: 20px;
+}
+.row .key{
+    margin: 0 10px;
+}
+/*注意，html里两个key（inline元素）之间若有个回车，则间隔一个小空格；但是JS里没有这个小空格，所以调整间距前key紧紧挨在一起*/
+
+.key img{
+	width:16px;
+	height: 16px;
+	position: absolute;
+	left: 4px;
+	bottom: 2px;
+}
+/*网站对应图标*/
+
+.key .text{
+	position: absolute;
+	left: 4px;
+	top: 2px;
+}

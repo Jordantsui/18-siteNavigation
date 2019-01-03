@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>我的导航</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header></header>
+    <main>
+
+    	<div class="wrapper" id="zhangsan"></div>
+    </main>
+    <footer></footer>
+    <script>
+        //1.初始化数据
+        var keysAndHash=init()
+        var keys=keysAndHash['keys']
+        var hash=keysAndHash['hash']
+
+
+
+
+        //2.生成键盘
+        generateKeyboard(keys,hash)
+
+        //3.监听键盘
+        listenToUser(hash)
+
+        function getFromLocalStorage(name){
+            return JSON.parse(localStorage.getItem(name)||'null')
+        }
+        function tag(tagName,attributes){
+            var element=document.createElement(tagName)
+            for(var key in attributes){  //key 为 className,id,textContent等属性
+                element[key]=attributes[key]
+            }
+            return element
+        }
+        function createImage(domain){
+            var img1=tag('img',{})
+            if(domain){
+                img1.src='http://'+domain+'/favicon.ico'
+            //这个地址存的是相应网站的logo
+            }else{
+                img1.src='//i.loli.net/2019/01/02/5c2cc078d6735.png'
+            }
+            img1.onerror=function(ccc){
+                ccc.target.src='//i.loli.net/2019/01/02/5c2cc078d6735.png'
+            }
+            //注意，自己图片生成的地址需要去掉http协议
+            //若我们没写else里的这一堆东西，默认img.src=''，刷新本页面
+            return img1
+        }
+        function generateKeyboard(keys,hash){
+            var index=0
+            while(index<keys['length']){
+                var div1=tag('div',{className:'row'})
+                zhangsan.appendChild(div1)
+                //script里用到id是直呼其名
+                var row=keys[index]
+                index=index+1
+                var index2=0
+                while(index2<row['length']){
+                    var kbd1=tag('kbd',{className:'key'})
+                    var span1=tag('span',{className:'text',textContent:row[index2]})
+                    //一开始没加span1，kbd1里直接装字母，网站图标和字母有挤压的时候，无法解决，span1装字母，kbd1只表示键
+                    kbd1.appendChild(span1)
+                    //注意这一句，给kbd1规定class
+                    var img1=createImage(hash[row[index2]])
+
+                    var button1=tag('button',{textContent:'编辑',id:row[index2]})
+                    button1.onclick=function(bbb){
+                        //console.log(button1)
+                        //不管点击什么，打印出来的都是<button id="m">编辑</button>
+                        //因为button1是个容器，每点击一次就会执行多次，最后一次执行的结果放在button1里面
+                        var button2=bbb['target']
+                        //如果是console.log(bbb.target)，输出<button id="m">编辑</button>
+                        //一开始是key=bbb['target']['id']，后来为了提取img2，分成了两部分
+                        var img2=button2.previousSibling
+                        //在一个kbd中，img位于button之前，二者是兄弟关系
+                        //这个语句是通过搜索js get prev child，打开w3cSchool看到的
+                        var key=button2['id']
+                        var x=prompt('给我一个网址')
+                        hash[key]=x
+                        img2.src='http://'+x+'/favicon.ico'
+                        img2.onerror=function(ccc){
+                            ccc.target.src='//i.loli.net/2019/01/02/5c2cc078d6735.png'
+                        }
+                        localStorage.setItem('zzz',JSON.stringify(hash))
+                    }
+                    kbd1.appendChild(img1)
+                    kbd1.appendChild(button1)
+                    div1.appendChild(kbd1)
+                    index2=index2+1
+                }
+            }
+        }
+        function listenToUser(hash){
+            document.onkeypress=function(aaa){
+                var key=aaa['key']
+                var website=hash[key]
+                console.log(website)
+                //location.href='http://'+website
+                window.open('http://'+website,'_blank')
+                //aaa内包含了此次按键的所有信息，aaa['key']是指此次按键的值
+                //location是全局变量，表示当前地址栏，模拟在当前页面输入网址的操作
+                //window.open表示模拟新开一个页面
+            }
+            //监听错地方，function也不会执行，document是一个很大的范围，所以在这监听应该没啥问题
+        }
+        function init(){
+            var keys={
+                '0':['q','w','e','r','t','y','u','i','o','p'],
+                //这一行的快速生成方法叫正则
+                //数组的本质是hash，[]是数组形式，简写；hash的形式是{0:x,1:y,length:2}，是完整的写法。
+                '1':['a','s','d','f','g','h','j','k','l'],
+                '2':['z','x','c','v','b','n','m'],
+                'length':3
+            //如果不加var，是全局变量，可能会出问题；加var之后，变局部变量
+            }
+            var hash={
+                't':'tianya.com',
+                'y':'youtube.com',
+                'q':'qq.com',
+                'w':'weibo.com',
+                'e':'ele.me',
+                'r':'renren.com',
+                'u':'uc.com',
+                'i':'iqiyi.com',
+                'o':'opera.com',
+                'p':undefined,
+                'a':'weibo.com',
+                's':'sohu.com',
+                'm':'www.mcdonalds.com.cn'
+            }
+            var hashInLocalStorage=getFromLocalStorage('zzz')
+            if (hashInLocalStorage) {
+                hash=hashInLocalStorage
+            }
+            //取出localStorage，若localStorage不是空的字符串，则拿来覆盖hash
+
+
+
+            return {
+                'keys':keys,
+                'hash':hash
+            }
+            //JS里的函数不能返回两个值
+        }
+
+    </script>
+    <!--标签不想用“<kbd>e</kbd>”这样一个一个写，可用js全部生成-->
+</body>
+</html>
